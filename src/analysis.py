@@ -73,7 +73,7 @@ for paper_type, count in paper_types.most_common():
     
 #type of study vs paper topic
 topics_sorted = [item[0] for item in topics.most_common()]
-with open('bubbleplot.csv', 'w') as f:
+with open('results/bubbleplot.csv', 'w') as f:
     print("study-type,"+",".join(topics_sorted), file=f)
     for paper_type in paper_types.keys():
         papers = [paper for paper in data if paper["Study type"] == paper_type]
@@ -131,7 +131,7 @@ for i, value in enumerate(bubble_data_s):
                     ha="center", va="center",
                     fontsize=8)
 fig.tight_layout()
-fig.savefig("bubbleplot.pdf")
+fig.savefig("results/bubbleplot.pdf")
 
 fig, ax = plt.subplots(figsize=(6, 8))
 ax.scatter(
@@ -157,7 +157,7 @@ for i, value in enumerate(bubble_data_s):
                     fontsize=8)
 
 fig.tight_layout()
-fig.savefig("bubbleplot-horizontal.pdf")
+fig.savefig("results/bubbleplot-horizontal.pdf")
 
 ##### BAR Plots - Study type
 def _get_counts_by_row(data, column):
@@ -184,7 +184,7 @@ ax.spines['right'].set_visible(False)
 ax.spines['top'].set_visible(False)
 
 fig.tight_layout()
-fig.savefig("barplot_study_type.pdf")
+fig.savefig("results/barplot_study_type.pdf")
 
 
 ##### BAR Plots  - Year
@@ -209,7 +209,7 @@ ax.spines['top'].set_visible(False)
 # ax.spines['bottom'].set(linewidth=0.5)
 
 fig.tight_layout()
-fig.savefig("barplot_year.pdf")
+fig.savefig("results/barplot_year.pdf")
 
 ##### BAR Plots  - Domain
 def _get_counts_by_row_multiple(data, column, others=None):
@@ -247,7 +247,7 @@ ax.spines['right'].set_visible(False)
 ax.spines['top'].set_visible(False)
 
 fig.tight_layout()
-fig.savefig("barplot_domain.pdf")
+fig.savefig("results/barplot_domain.pdf")
 
 ### HORIZONTAL ####
 fig, ax = plt.subplots(figsize=(6, 3.5))
@@ -269,7 +269,7 @@ ax.spines['top'].set_visible(False)
 
 
 fig.tight_layout()
-fig.savefig("barplot_domain_horizontal.pdf")
+fig.savefig("results/barplot_domain_horizontal.pdf")
 
 
 ##### BAR Plots  - Studied Artifact
@@ -295,5 +295,5 @@ ax.spines['right'].set_visible(False)
 ax.spines['top'].set_visible(False)
 
 fig.tight_layout()
-fig.savefig("barplot_artifact.pdf")
+fig.savefig("results/barplot_artifact.pdf")
 
