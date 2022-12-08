@@ -31,13 +31,21 @@ ARTIFACT_DICTIONARY = {
     'all': "general",
 }
 
+TOPIC_DICTIONARY = {
+    "precision-energy-tradeoff": "Precision-Energy Trade-off"
+}
+
+def _flatten(l):
+    return list(item for sublist in l for item in sublist)
+
+
 data = []
 with open('data/Selection and Extraction sheet (SLR Green AI).xlsx - Data extraction CLEAN.csv') as csv_file:
     reader = csv.DictReader(csv_file, delimiter=',')
     for row in reader:
-        row["topic_set"] = set(topic.strip() for topic in row["Topic"].split(","))
+        row["topic_set"] = set(TOPIC_DICTIONARY.get(topic.strip(),topic.strip()) for topic in row["Topic"].split(","))
         row["domain_set"] = set(topic.strip() for topic in row["Domain"].split(","))
-        row["artifact_set"] = set(ARTIFACT_DICTIONARY.get(topic.strip(),topic.strip()) for topic in row["Artifact considered"].split(","))
+        row["artifact_set"] = set(ARTIFACT_DICTIONARY.get(value.strip(),value.strip()) for value in row["Artifact considered"].split(","))
         data.append(row)
 
 
@@ -71,6 +79,146 @@ print(paper_types)
 for paper_type, count in paper_types.most_common():
     print(f"{paper_type}, {count}")
     
+
+
+##### BAR Plots - Study type
+def _get_counts_by_row(data, column):
+    counts = Counter(row[column] for row in data).most_common()
+    labels, yy = zip(*counts)
+    return labels, yy
+
+labels, yy = _get_counts_by_row(data, "Study type")
+labels = list(map(str.title, labels))
+xx = range(len(labels))
+fig, ax = plt.subplots(figsize=(6, 4))
+bar = ax.bar(xx, yy, tick_label=labels,
+       color="lightgray", width=0.35,
+       edgecolor="black", linewidth=0.5)
+ax.bar_label(bar, label_type='edge')
+ax.set_xlabel("Study type",  loc='right')
+ax.set_ylabel("No. papers",  loc='top', rotation="horizontal")
+
+ax.set_xlim((-0.4, 2.7))
+ax.grid(axis="y", color='white', linestyle='--', linewidth=1, alpha=0.4)
+       
+ax.spines['left'].set_visible(False)
+ax.spines['right'].set_visible(False)
+ax.spines['top'].set_visible(False)
+
+fig.tight_layout()
+fig.savefig("results/barplot_study_type.pdf")
+
+
+##### BAR Plots  - Year
+labels, yy = labels, yy = _get_counts_by_row(data, "Year")
+labels, yy = zip(*sorted(zip(labels, yy)))
+labels = list(map(str.title, labels))
+xx = range(len(labels))
+fig, ax = plt.subplots(figsize=(6, 4))
+bar = ax.bar(xx, yy, tick_label=labels,
+       color="lightgray", width=0.35,
+       edgecolor="black", linewidth=0.5)
+ax.bar_label(bar, label_type='edge')
+ax.set_xlabel("Year",  loc='center')
+ax.set_ylabel("No. papers",  loc='top', rotation="horizontal")
+
+# ax.set_xlim((-0.4, 2.7))
+ax.grid(axis="y", color='white', linestyle='--', linewidth=1, alpha=0.4)
+       
+ax.spines['left'].set_visible(False)
+ax.spines['right'].set_visible(False)
+ax.spines['top'].set_visible(False)
+# ax.spines['bottom'].set(linewidth=0.5)
+
+fig.tight_layout()
+fig.savefig("results/barplot_year.pdf")
+
+##### BAR Plots  - Domain
+def _get_counts_by_row_multiple(data, column, others=None):
+    """Count frequency when one paper/row has multiple values."""
+    column = _flatten(row[column] for row in data)
+    if others:
+        other_count = sum(1 for value in column if value in others)
+        column = [value for value in column if value not in others]
+    counts = Counter(column).most_common()
+    labels, yy = zip(*counts)
+    if others:
+        labels = [*labels, "other"]
+        yy = [*yy, other_count]
+    return labels, yy
+
+others = ['smart cities', 'human activity', 'wereables', 'embedded-systems', 'autonomous driving', 'NLP', 'health']
+labels, yy = labels, yy = _get_counts_by_row_multiple(data, "domain_set", others=others)
+labels = list(map(str.title, labels))
+labels = list(map(lambda x: x.replace(' ','\n'), labels))
+xx = range(len(labels))
+
+fig, ax = plt.subplots(figsize=(6, 4))
+bar = ax.bar(xx, yy, tick_label=labels,
+       color="lightgray", width=0.35,
+       edgecolor="black", linewidth=0.5)
+ax.bar_label(bar, label_type='edge')
+ax.set_xlabel("Domain",  loc='center')
+ax.set_ylabel("No. papers",  loc='top', rotation="horizontal")
+
+# ax.set_xlim((-0.4, 2.7))
+ax.grid(axis="y", color='white', linestyle='--', linewidth=1, alpha=0.4)
+       
+ax.spines['left'].set_visible(False)
+ax.spines['right'].set_visible(False)
+ax.spines['top'].set_visible(False)
+
+fig.tight_layout()
+fig.savefig("results/barplot_domain.pdf")
+
+### HORIZONTAL ####
+fig, ax = plt.subplots(figsize=(6, 3.5))
+
+bar = ax.barh(y = list(reversed(xx)), width=yy, tick_label=labels,
+       color="lightgray", height=0.35,
+       edgecolor="black", linewidth=0.5)
+ax.bar_label(bar,
+             label_type='edge', padding=3)
+ax.set_xlabel("No. papers",  loc='center')
+ax.set_ylabel("Domain",  loc='top', rotation="horizontal")
+
+# ax.set_xlim((-0.4, 2.7))
+ax.grid(axis="x", color='white', linestyle='--', linewidth=1, alpha=0.4)
+       
+ax.spines['bottom'].set_visible(False)
+ax.spines['right'].set_visible(False)
+ax.spines['top'].set_visible(False)
+
+
+fig.tight_layout()
+fig.savefig("results/barplot_domain_horizontal.pdf")
+
+
+##### BAR Plots  - Studied Artifact
+
+others = ['architecture', 'hardware', 'deep Learning', 'CPU', 'framework', '-']
+labels, yy = labels, yy = _get_counts_by_row_multiple(data, "artifact_set", others=others)
+labels = list(map(str.title, labels))
+xx = range(len(labels))
+
+fig, ax = plt.subplots(figsize=(6, 4))
+bar = ax.bar(xx, yy, tick_label=labels,
+       color="lightgray", width=0.35,
+       edgecolor="black", linewidth=0.5)
+ax.bar_label(bar, label_type='edge')
+ax.set_xlabel("Artifact",  loc='center')
+ax.set_ylabel("No. papers",  loc='top', rotation="horizontal")
+
+# ax.set_xlim((-0.4, 2.7))
+ax.grid(axis="y", color='white', linestyle='--', linewidth=1, alpha=0.4)
+       
+ax.spines['left'].set_visible(False)
+ax.spines['right'].set_visible(False)
+ax.spines['top'].set_visible(False)
+
+fig.tight_layout()
+fig.savefig("results/barplot_artifact.pdf")
+
 #type of study vs paper topic
 topics_sorted = [item[0] for item in topics.most_common()]
 with open('results/bubbleplot.csv', 'w') as f:
@@ -79,7 +227,7 @@ with open('results/bubbleplot.csv', 'w') as f:
         papers = [paper for paper in data if paper["Study type"] == paper_type]
         # print (papers)
         subtopics = Counter()
-        subtopics.update({x:0 for x in topics_sorted})
+        subtopics.update({x:0 for x in topics_sorted}) #set initial data
         for paper in papers:
             subtopics.update(paper["topic_set"])
         print(f"{paper_type}," + ",".join(str(subtopics[topic]) for topic in topics_sorted), file=f)
@@ -88,14 +236,11 @@ with open('results/bubbleplot.csv', 'w') as f:
 ## Bubble Plot
 
 bubble_data = []
-with open('bubbleplot.csv', 'r') as f:
+with open('results/bubbleplot.csv', 'r') as f:
     reader = csv.reader(f, delimiter=',')
     for row in reader:
             bubble_data.append(row)
 print(bubble_data)
-
-def _flatten(l):
-    return list(item for sublist in l for item in sublist)
 
 bubble_data_xlabels = [label.title() for label in bubble_data[0][1:]]
 bubble_data_ylabels = [row[0].title() for row in bubble_data[1:]]
@@ -159,141 +304,33 @@ for i, value in enumerate(bubble_data_s):
 fig.tight_layout()
 fig.savefig("results/bubbleplot-horizontal.pdf")
 
-##### BAR Plots - Study type
-def _get_counts_by_row(data, column):
-    counts = Counter(row[column] for row in data).most_common()
-    labels, yy = zip(*counts)
-    return labels, yy
+### BAR plot – Topic
 
-labels, yy = _get_counts_by_row(data, "Study type")
-labels = list(map(str.title, labels))
-xx = range(len(labels))
-fig, ax = plt.subplots(figsize=(6, 4))
-bar = ax.bar(xx, yy, tick_label=labels,
-       color="lightgray", width=0.35,
-       edgecolor="black", linewidth=0.5)
-ax.bar_label(bar, label_type='edge')
-ax.set_xlabel("Study type",  loc='right')
-ax.set_ylabel("No. papers",  loc='top', rotation="horizontal")
-
-ax.set_xlim((-0.4, 2.7))
-ax.grid(axis="y", color='white', linestyle='--', linewidth=1, alpha=0.3)
-       
-ax.spines['left'].set_visible(False)
-ax.spines['right'].set_visible(False)
-ax.spines['top'].set_visible(False)
-
-fig.tight_layout()
-fig.savefig("results/barplot_study_type.pdf")
-
-
-##### BAR Plots  - Year
-labels, yy = labels, yy = _get_counts_by_row(data, "Year")
-labels, yy = zip(*sorted(zip(labels, yy)))
-labels = list(map(str.title, labels))
-xx = range(len(labels))
-fig, ax = plt.subplots(figsize=(6, 4))
-bar = ax.bar(xx, yy, tick_label=labels,
-       color="lightgray", width=0.35,
-       edgecolor="black", linewidth=0.5)
-ax.bar_label(bar, label_type='edge')
-ax.set_xlabel("Year",  loc='center')
-ax.set_ylabel("No. papers",  loc='top', rotation="horizontal")
-
-# ax.set_xlim((-0.4, 2.7))
-ax.grid(axis="y", color='white', linestyle='--', linewidth=1, alpha=0.3)
-       
-ax.spines['left'].set_visible(False)
-ax.spines['right'].set_visible(False)
-ax.spines['top'].set_visible(False)
-# ax.spines['bottom'].set(linewidth=0.5)
-
-fig.tight_layout()
-fig.savefig("results/barplot_year.pdf")
-
-##### BAR Plots  - Domain
-def _get_counts_by_row_multiple(data, column, others=None):
-    """Count frequency when one paper/row has multiple values."""
-    column = _flatten(row[column] for row in data)
-    if others:
-        other_count = sum(1 for value in column if value in others)
-        column = [value for value in column if value not in others]
-    counts = Counter(column).most_common()
-    labels, yy = zip(*counts)
-    if others:
-        labels = [*labels, "other"]
-        yy = [*yy, other_count]
-    return labels, yy
-
-others = ['smart cities', 'human activity', 'wereables', 'embedded-systems', 'autonomous driving', 'NLP', 'health']
-labels, yy = labels, yy = _get_counts_by_row_multiple(data, "domain_set", others=others)
+others = ['user values', 'scheduling', 'network-architecture', 'rebound effects', 'security', 'energy capping']
+labels, yy = labels, yy = _get_counts_by_row_multiple(data, "topic_set", others=others)
 labels = list(map(str.title, labels))
 labels = list(map(lambda x: x.replace(' ','\n'), labels))
 xx = range(len(labels))
 
-fig, ax = plt.subplots(figsize=(6, 4))
+fig, ax = plt.subplots(figsize=(10, 4))
 bar = ax.bar(xx, yy, tick_label=labels,
        color="lightgray", width=0.35,
        edgecolor="black", linewidth=0.5)
 ax.bar_label(bar, label_type='edge')
-ax.set_xlabel("Domain",  loc='center')
+ax.set_xlabel("Topic",  loc='center')
 ax.set_ylabel("No. papers",  loc='top', rotation="horizontal")
+ax.tick_params(axis='x', labelrotation = 45, labelright=True)
+for tick in ax.xaxis.get_majorticklabels():
+    tick.set_horizontalalignment("right")
 
 # ax.set_xlim((-0.4, 2.7))
-ax.grid(axis="y", color='white', linestyle='--', linewidth=1, alpha=0.3)
+ax.grid(axis="y", color='white', linestyle='--', linewidth=1, alpha=0.4)
        
 ax.spines['left'].set_visible(False)
 ax.spines['right'].set_visible(False)
 ax.spines['top'].set_visible(False)
 
 fig.tight_layout()
-fig.savefig("results/barplot_domain.pdf")
+fig.savefig("results/barplot_topic.pdf")
 
-### HORIZONTAL ####
-fig, ax = plt.subplots(figsize=(6, 3.5))
-
-bar = ax.barh(y = list(reversed(xx)), width=yy, tick_label=labels,
-       color="lightgray", height=0.35,
-       edgecolor="black", linewidth=0.5)
-ax.bar_label(bar,
-             label_type='edge', padding=3)
-ax.set_xlabel("No. papers",  loc='center')
-ax.set_ylabel("Domain",  loc='top', rotation="horizontal")
-
-# ax.set_xlim((-0.4, 2.7))
-ax.grid(axis="x", color='white', linestyle='--', linewidth=1, alpha=0.3)
-       
-ax.spines['bottom'].set_visible(False)
-ax.spines['right'].set_visible(False)
-ax.spines['top'].set_visible(False)
-
-
-fig.tight_layout()
-fig.savefig("results/barplot_domain_horizontal.pdf")
-
-
-##### BAR Plots  - Studied Artifact
-
-others = ['architecture', 'hardware', 'deep Learning', 'CPU', 'framework', '-']
-labels, yy = labels, yy = _get_counts_by_row_multiple(data, "artifact_set", others=others)
-labels = list(map(str.title, labels))
-xx = range(len(labels))
-import pdb; pdb.set_trace()
-fig, ax = plt.subplots(figsize=(6, 4))
-bar = ax.bar(xx, yy, tick_label=labels,
-       color="lightgray", width=0.35,
-       edgecolor="black", linewidth=0.5)
-ax.bar_label(bar, label_type='edge')
-ax.set_xlabel("Artifact",  loc='center')
-ax.set_ylabel("No. papers",  loc='top', rotation="horizontal")
-
-# ax.set_xlim((-0.4, 2.7))
-ax.grid(axis="y", color='white', linestyle='--', linewidth=1, alpha=0.3)
-       
-ax.spines['left'].set_visible(False)
-ax.spines['right'].set_visible(False)
-ax.spines['top'].set_visible(False)
-
-fig.tight_layout()
-fig.savefig("results/barplot_artifact.pdf")
 
