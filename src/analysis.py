@@ -37,11 +37,13 @@ ARTIFACT_DICTIONARY = {
 
 TOPIC_DICTIONARY = {
     "precision-energy-tradeoff": "Precision-Energy Trade-off",
-    "model-comparison": "Model Benchmarking"
+    "model-comparison": "Model Benchmarking",
+    "network-architecture": "network architecture"
 }
 
 TOPIC_IGNORE = [
     "tool",
+    "model-simplification",
 ]
 
 TYPE_OF_DATA_DICTIONARY = {
@@ -247,7 +249,7 @@ fig.tight_layout()
 fig.savefig("results/barplot_artifact.pdf")
 
 #type of study vs paper topic
-others = ['user values', 'scheduling', 'network-architecture', 'rebound effects', 'security', 'energy capping']
+others = ['user values', 'scheduling', 'rebound effects', 'security', 'energy capping']
 topics_sorted = [item[0] for item in topics.most_common() if item[0] not in others]
 topics_sorted.append("Other")
 with open('results/bubbleplot.csv', 'w') as f:
@@ -259,6 +261,8 @@ with open('results/bubbleplot.csv', 'w') as f:
         subtopics.update({x:0 for x in topics_sorted}) #set initial data
         for paper in papers:
             if paper["topic_set"].intersection(set(others)):
+                print("-------")
+                print(paper)
                 subtopics.update({"Other"})
             subtopics.update(paper["topic_set"])
         print(f"{paper_type}," + ",".join(str(subtopics[topic]) for topic in topics_sorted), file=f)
@@ -337,7 +341,7 @@ fig.savefig("results/bubbleplot-horizontal.pdf")
 
 ### BAR plot – Topic
 
-others = ['user values', 'scheduling', 'network-architecture', 'rebound effects', 'security', 'energy capping']
+others = ['user values', 'scheduling', 'rebound effects', 'security', 'energy capping']
 labels, yy = labels, yy = _get_counts_by_row_multiple(data, "topic_set", others=others)
 labels = list(map(str.title, labels))
 # labels = list(map(lambda x: x.replace(' ','\n'), labels))
