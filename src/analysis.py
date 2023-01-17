@@ -135,7 +135,7 @@ ax.spines['right'].set_visible(False)
 ax.spines['top'].set_visible(False)
 
 fig.tight_layout()
-fig.savefig("results/barplot_study_type.pdf")
+fig.savefig("results/barplot_study_type.eps")
 
 
 ##### BAR Plots  - Year
@@ -160,7 +160,7 @@ ax.spines['top'].set_visible(False)
 # ax.spines['bottom'].set(linewidth=0.5)
 
 fig.tight_layout()
-fig.savefig("results/barplot_year.pdf")
+fig.savefig("results/barplot_year.eps")
 
 ##### BAR Plots  - Domain
 def _get_counts_by_row_multiple(data, column, others=None):
@@ -198,7 +198,7 @@ ax.spines['right'].set_visible(False)
 ax.spines['top'].set_visible(False)
 
 fig.tight_layout()
-fig.savefig("results/barplot_domain.pdf")
+fig.savefig("results/barplot_domain.eps")
 
 ### HORIZONTAL ####
 fig, ax = plt.subplots(figsize=(6, 3.5))
@@ -220,7 +220,7 @@ ax.spines['top'].set_visible(False)
 
 
 fig.tight_layout()
-fig.savefig("results/barplot_domain_horizontal.pdf")
+fig.savefig("results/barplot_domain_horizontal.eps")
 
 
 ##### BAR Plots  - Studied Artifact
@@ -246,7 +246,7 @@ ax.spines['right'].set_visible(False)
 ax.spines['top'].set_visible(False)
 
 fig.tight_layout()
-fig.savefig("results/barplot_artifact.pdf")
+fig.savefig("results/barplot_artifact.eps")
 
 #type of study vs paper topic
 others = ['user values', 'scheduling', 'rebound effects', 'security', 'energy capping']
@@ -311,7 +311,7 @@ print(bubble_data_s)
 #                     ha="center", va="center",
 #                     fontsize=8)
 # fig.tight_layout()
-# fig.savefig("results/bubbleplot.pdf")
+# fig.savefig("results/bubbleplot.eps")
 
 fig, ax = plt.subplots(figsize=(5, 7))
 ax.scatter(
@@ -337,7 +337,7 @@ for i, value in enumerate(bubble_data_s):
                     fontsize=8)
 
 fig.tight_layout()
-fig.savefig("results/bubbleplot-horizontal.pdf")
+fig.savefig("results/bubbleplot-horizontal.eps")
 
 ### BAR plot – Topic
 
@@ -366,7 +366,7 @@ ax.spines['right'].set_visible(False)
 ax.spines['top'].set_visible(False)
 
 fig.tight_layout()
-fig.savefig("results/barplot_topic.pdf")
+fig.savefig("results/barplot_topic.eps")
 
 ### BAR plot – Considered phase
 
@@ -391,7 +391,7 @@ ax.spines['right'].set_visible(False)
 ax.spines['top'].set_visible(False)
 
 fig.tight_layout()
-fig.savefig("results/barplot_phase.pdf")
+fig.savefig("results/barplot_phase.eps")
 
 
 ### BAR plot – type of data
@@ -422,7 +422,7 @@ ax.spines['right'].set_visible(False)
 ax.spines['top'].set_visible(False)
 
 fig.tight_layout()
-fig.savefig("results/barplot_type_of_data.pdf")
+fig.savefig("results/barplot_type_of_data.eps")
 
 ### BAR plot – research strategy
 others = ["none"]
@@ -451,7 +451,7 @@ ax.spines['right'].set_visible(False)
 ax.spines['top'].set_visible(False)
 
 fig.tight_layout()
-fig.savefig("results/barplot_research_strategy.pdf")
+fig.savefig("results/barplot_research_strategy.eps")
 
 
 
