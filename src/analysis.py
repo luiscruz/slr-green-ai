@@ -76,6 +76,7 @@ with open('data/Selection and Extraction sheet (SLR Green AI).xlsx - Data extrac
         row["type_of_data_set"] = set(TYPE_OF_DATA_DICTIONARY.get(value.strip(), value.strip())
                                       for value in row["Type of data"].split(","))
         row["validation_type_set"] = set(VALIDATION_TYPE_DICTIONARY.get(value.strip(),value.strip()) for value in row["Validation type"].split(","))
+        row["green_definition"] = set(VALIDATION_TYPE_DICTIONARY.get(value.strip(),value.strip()) for value in row["Green AI definition"].split(","))
         data.append(row)
 
 
@@ -452,6 +453,38 @@ ax.spines['top'].set_visible(False)
 
 fig.tight_layout()
 fig.savefig("results/barplot_research_strategy.eps")
+
+
+### BAR plot – green definition
+# others = ["none"]
+labels, yy = labels, yy = _get_counts_by_row_multiple(data, "green_definition")
+# labels[-1] = "None"
+labels = [label.title() for label in labels]
+
+xx = range(len(labels))
+
+fig, ax = plt.subplots(figsize=(4,2))
+bar = ax.bar(xx, yy, tick_label=labels,
+       color="lightgray", width=0.35,
+       edgecolor="black", linewidth=0.5, zorder=2)
+ax.bar_label(bar, label_type='edge')
+ax.set_xlabel("Green AI Definition",  loc='center', labelpad=LABEL_PAD, fontsize=12)
+# ax.set_ylabel("No. papers",  loc='top', rotation="horizontal")
+ax.tick_params(axis='x', labelrotation = 0, labelsize=9)
+# for tick in ax.xaxis.get_majorticklabels():
+    # tick.set_horizontalalignment("right")
+
+ax.set_xlim((-0.4, 2.6))
+ax.grid(axis="y", color='lightgray', linestyle='-', linewidth=0.5)
+       
+ax.spines['left'].set_visible(False)
+ax.spines['right'].set_visible(False)
+ax.spines['top'].set_visible(False)
+
+fig.tight_layout()
+fig.savefig("results/barplot_green_definition.eps")
+
+
 
 
 
