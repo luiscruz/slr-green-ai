@@ -98,7 +98,7 @@ June,8,Green machine learning via augmented Gaussian processes and multi-informa
         publisher = {Springer Berlin Heidelberg},
         doi = {10.1007/s00500-021-05684-7}
 }",,
-June,9,How Sustainable is Machine Learning in Energy Applications?–The Sustainable Machine Learning Balance Sheet,"S Wenninger, C Kaymakci, C Wiethe, J Römmelt, ...",International Conference on Wirtschaftsinformatik,,C,2022,"energy efficiency, carbon footprint",solution,"estimation, tool",general,-,all,all,"laboratory, judgement",-,-,Mix,academic,no,,"@misc{Wenninger2022,
+June,9,How Sustainable is Machine Learning in Energy Applications?–The Sustainable Machine Learning Balance Sheet,"S Wenninger, C Kaymakci, C Wiethe, J Römmelt, ...",International Conference on Wirtschaftsinformatik,,C,2022,"energy efficiency, carbon footprint",solution,"estimation, tool",general,-,all,all,laboratory,-,-,Mix,academic,no,,"@misc{Wenninger2022,
         author = {Wenninger, Simon and Kaymakci, Can and Wiethe, Christian and R{\ifmmode\ddot{o}\else\""{o}\fi}mmelt, J{\ifmmode\ddot{o}\else\""{o}\fi}rg and Baur, Lukas and H{\ifmmode\ddot{a}\else\""{a}\fi}ckel, Bj{\ifmmode\ddot{o}\else\""{o}\fi}rn and Sauer, Alexander},
         title = {{How Sustainable is Machine Learning in Energy Applications? {\textendash} The Sustainable Machine Learning Balance Sheet}},
         year = {2022},
